@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 
 export default function ListItem({ name, menu, items }) {
   const [added, setAdded] = useState(false);
-  const [available, setAvailable] = useState(false);
 
   function addToCart(item) {
-    setAvailable(false);
     let cart = localStorage.getItem('cart');
-    if (cart) {
+    if (cart && cart !== null) {
       let newCart = JSON.parse(cart);
       newCart = newCart.filter((car) => car.id !== item.id);
 
