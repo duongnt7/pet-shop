@@ -36,3 +36,46 @@
     transform: rotate(360deg);
   }
 }
+
+
+.navbar{
+  background-color: #ccc;
+  height: 250px;
+  position: relative;
+}
+
+.cart{
+  position: absolute;
+  bottom: 30px;
+  right: 40px
+}
+
+.login-btn{
+  position: absolute;
+  top: 30px;
+  right: 34px;
+  outline: none;
+  height: 30px;
+}
+
+.login-area {
+  position: fixed;
+  z-index: 10;
+  background-color: #fff;
+  height: 500px;
+  width: 600px !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.shadown-full{
+  width: 100vw;
+  height: 100vw;
+  background-color: #000;
+  display: block;
+  position: fixed;
+  z-index: 2;
+  opacity: 0.6;
+  left: 0;
+}

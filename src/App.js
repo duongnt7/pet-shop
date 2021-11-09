@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 import Cart from './components/Cart';
 import ListItem from './components/ListItem';
 import Navbar from './components/Navbar';
+import Login from './components/Login';
+
 const nameDog = 'Shop cún cưng';
 const nameCat = 'Shop mèo cưng';
 
@@ -28,112 +31,40 @@ const menuCat = [
   { title: 'Y tế và thuốc cho mèo', sort: '' },
 ];
 
-const listDog = [
-  {
-    title: 'Sữa tắm gội Tropiclean trị ve và bọ chét 592ml',
-    img: 'https://www.petcity.vn/media/banner/20_Maya16f779002f7bc582b44b7de773be4e2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Sữa tắm gội Tropiclean trị ve và bọ chét 592ml',
-    img: 'https://www.petcity.vn/media/banner/20_Maya16f779002f7bc582b44b7de773be4e2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Sữa tắm gội Tropiclean trị ve và bọ chét 592ml',
-    img: 'https://www.petcity.vn/media/banner/20_Maya16f779002f7bc582b44b7de773be4e2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Sữa tắm gội Tropiclean trị ve và bọ chét 592ml',
-    img: 'https://www.petcity.vn/media/product/250_4760_b__nh_treo_chu___ng_v__t_500ml2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Sữa tắm gội Tropiclean trị ve và bọ chét 592ml',
-    img: 'https://www.petcity.vn/media/product/250_4760_b__nh_treo_chu___ng_v__t_500ml2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Sữa tắm gội Tropiclean trị ve và bọ chét 592ml',
-    img: 'https://www.petcity.vn/media/product/250_4760_b__nh_treo_chu___ng_v__t_500ml2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Sữa tắm gội Tropiclean trị ve và bọ chét 592ml',
-    img: 'https://www.petcity.vn/media/product/250_4760_b__nh_treo_chu___ng_v__t_500ml2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Sữa tắm gội Tropiclean trị ve và bọ chét 592ml',
-    img: 'https://www.petcity.vn/media/product/250_4760_b__nh_treo_chu___ng_v__t_500ml2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-];
 
-const listCat = [
-  {
-    title: 'Khăn siêu thấm nhỏ cho chó mèo',
-    img: 'https://www.petcity.vn/media/banner/20_Maya16f779002f7bc582b44b7de773be4e2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Khăn siêu thấm nhỏ cho chó mèo',
-    img: 'https://www.petcity.vn/media/banner/20_Maya16f779002f7bc582b44b7de773be4e2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Khăn siêu thấm nhỏ cho chó mèo',
-    img: 'https://www.petcity.vn/media/banner/20_Maya16f779002f7bc582b44b7de773be4e2.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Khăn siêu thấm nhỏ cho chó mèo',
-    img: 'https://www.petcity.vn/media/product/250_4772_3.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Khăn siêu thấm nhỏ cho chó mèo',
-    img: 'https://www.petcity.vn/media/product/250_4772_3.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Khăn siêu thấm nhỏ cho chó mèo',
-    img: 'https://www.petcity.vn/media/product/250_4772_3.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Khăn siêu thấm nhỏ cho chó mèo',
-    img: 'https://www.petcity.vn/media/product/250_4772_3.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-  {
-    title: 'Khăn siêu thấm nhỏ cho chó mèo',
-    img: 'https://www.petcity.vn/media/product/250_4772_3.jpg',
-    price: '395.000đ',
-    link: '/',
-  },
-];
 
 function App() {
   const [showCart, setShowCart] = useState(false);
+  const [listProductDog, setListProductDog] = useState()
+  const [listProductCat, setListProductCat] = useState()
+  const [isHidden, setIsHidden] = useState(false)
   function _showCart() {
     setShowCart(!showCart);
+  }
+
+  useEffect(() => {
+    getDataCategoryProducts(2, setListProductDog)
+    getDataCategoryProducts(4, setListProductCat)
+  }, [])
+
+  function getDataCategoryProducts(categoryId, setFn) {
+    axios.get(`http://localhost:8000/api/categories/get-products/${categoryId}`)
+      .then(function (response) {
+        const data = response.data.slice(0, 9)
+
+        const listProduct = data.map(item => {
+          return {
+            title: item.name,
+            price: item.price + ".000đ",
+            link: '/',
+            img: item.imageDTOs[0].url
+          }
+        })
+        setFn(listProduct)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
   }
 
   return (
@@ -141,10 +72,17 @@ function App() {
       className='container homepage'
       style={{ overflow: showCart ? 'hidden' : 'auto', height: showCart ? '100vh' : 'auto' }}
     >
-      <Navbar showCart={_showCart} />
-      <ListItem name={nameDog} menu={menuDog} items={listDog} />
+      {isHidden && (
+        <>
+          <Login setIsHidden={setIsHidden}/>
+          <div className="shadown-full"> </div>
+        </>
+      )}
+
+      <Navbar setIsHidden={setIsHidden} showCart={_showCart} />
+      <ListItem name={nameDog} menu={menuDog} items={listProductDog} />
       <div className='clear' />
-      <ListItem name={nameCat} menu={menuCat} items={listCat} />
+      <ListItem name={nameCat} menu={menuCat} items={listProductCat} />
       <div className='clear' />
       {showCart && <Cart showCart={_showCart} />}
     </div>

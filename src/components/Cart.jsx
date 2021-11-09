@@ -27,6 +27,8 @@ const listProductInit = [
 export default function Cart({ showCart }) {
   const [listProduct, setListProduct] = useState(listProductInit);
 
+  
+
   function changeAmount(value, id) {
     let newListProduct = [...listProduct]
     newListProduct[id].amount = value;
