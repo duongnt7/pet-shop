@@ -1,6 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function ListItem({ name, menu, items }) {
+  const [added, setAdded] = useState(false);
+  const [available, setAvailable] = useState(false);
+
+  function addToCart(item) {
+    setAvailable(false);
+    let cart = localStorage.getItem('cart');
+    if (cart) {
+      let newCart = JSON.parse(cart);
+      newCart = newCart.filter((car) => car.id !== item.id);
+
+      newCart.push({ ...item, amount: 1 });
+      localStorage.setItem('cart', JSON.stringify(newCart));
+    } else {
+      localStorage.setItem('cart', JSON.stringify([{ ...item, amount: 1 }]));
+    }
+    setAdded(true);
+    setTimeout(() => {
+      setAdded(false);
+    }, 2000);
+  }
+
   return (
     <div className='box-pro-home floor-1' id='box-pro-home131'>
       <div className='pro-home-left'>
@@ -43,8 +64,14 @@ export default function ListItem({ name, menu, items }) {
                     <img src={item.img} alt={item.title} />
                   </div>
                   <div className='newp-name'>{item.title}</div>
-                  <div className='p-price'>{item.price}</div>
-                  <div className='btn-violet add home'>CHỌN MUA</div>
+                  <div className='p-price'>{item.price}.000đ</div>
+                  <div
+                    className='btn-violet add home'
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => addToCart(item)}
+                  >
+                    CHỌN MUA
+                  </div>
                 </div>
               </li>
             ))}
@@ -58,6 +85,20 @@ export default function ListItem({ name, menu, items }) {
         </div>
       </div>
       <div className='clear' />
+      {added && (
+        <div
+          style={{
+            padding: '10px',
+            borderRadius: '5px',
+            background: 'cyan',
+            position: 'fixed',
+            top: '35px',
+            right: '70px',
+          }}
+        >
+          Đã thêm vào giỏ hàng
+        </div>
+      )}
     </div>
   );
 }

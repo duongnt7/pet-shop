@@ -5,6 +5,7 @@ import Cart from './components/Cart';
 import ListItem from './components/ListItem';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
+import { DOMAIN } from './const';
 
 const nameDog = 'Shop cún cưng';
 const nameCat = 'Shop mèo cưng';
@@ -48,14 +49,15 @@ function App() {
   }, [])
 
   function getDataCategoryProducts(categoryId, setFn) {
-    axios.get(`http://localhost:8000/api/categories/get-products/${categoryId}`)
+    axios.get(`${DOMAIN}/api/categories/get-products/${categoryId}`)
       .then(function (response) {
         const data = response.data.slice(0, 9)
 
         const listProduct = data.map(item => {
           return {
+            id: item.id,
             title: item.name,
-            price: item.price + ".000đ",
+            price: item.price,
             link: '/',
             img: item.imageDTOs[0].url
           }

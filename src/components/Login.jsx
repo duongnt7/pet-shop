@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { DOMAIN } from '../const'
 export default function Login({setIsHidden}) {
 
   const [username, setUsername] = useState()
@@ -16,7 +17,7 @@ export default function Login({setIsHidden}) {
   function loginAction() {
     axios({
       method: 'post',
-      url: "http://localhost:8000/authenticate/login",
+      url: `${DOMAIN}/authenticate/login`,
       headers: {},
       data: {
         userName: username,

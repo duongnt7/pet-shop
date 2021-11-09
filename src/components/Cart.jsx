@@ -1,49 +1,33 @@
-import React, { useState } from 'react';
-
-const listProductInit = [
-  {
-    id: '1',
-    title: 'Royal Canin Indoor 27 (túi 2kg) - Thức ăn cho mèo',
-    img: 'https://www.petcity.vn/media/product/120_790_16_indoor_27.png',
-    amount: 1,
-    price: 10,
-  },
-  {
-    id: '2',
-    title: 'Royal Canin Indoor 27 (túi 2kg) - Thức ăn cho mèo',
-    img: 'https://www.petcity.vn/media/product/120_790_16_indoor_27.png',
-    amount: 2,
-    price: 15,
-  },
-  {
-    id: '3',
-    title: 'Royal Canin Indoor 27 (túi 2kg) - Thức ăn cho mèo',
-    img: 'https://www.petcity.vn/media/product/120_790_16_indoor_27.png',
-    amount: 5,
-    price: 20,
-  },
-];
+import React, { useEffect, useState } from 'react';
 
 export default function Cart({ showCart }) {
-  const [listProduct, setListProduct] = useState(listProductInit);
-
-  
+  const [listProduct, setListProduct] = useState();
 
   function changeAmount(value, id) {
-    let newListProduct = [...listProduct]
+    let newListProduct = [...listProduct];
     newListProduct[id].amount = value;
-    setListProduct(newListProduct)
+    setListProduct(newListProduct);
   }
 
   function summaryPrice() {
-    return listProduct.reduce(
+    return listProduct?.reduce(
       (sum, value) => sum + value.price * value.amount,
       0
     );
   }
 
   function removeProduct(id) {
-    setListProduct(listProduct.filter((product) => product.id !== id));
+    setListProduct(listProduct?.filter((product) => product.id !== id));
+  }
+
+  useEffect(() => {
+    let cart = localStorage.getItem('cart');
+    setListProduct(JSON.parse(cart));
+  }, []);
+
+  function handleShowcart() {
+    localStorage.setItem('cart', JSON.stringify(listProduct));
+    showCart();
   }
 
   return (
@@ -111,11 +95,11 @@ export default function Cart({ showCart }) {
                     <td>Xóa</td>
                   </tr>
 
-                  {listProduct.map((product, index) => (
+                  {listProduct?.map((product, index) => (
                     <tr id='itm790' key={product.id}>
                       <td>
                         <div className='cartInfo-img'>
-                          <div className href='/royal-canin-indoor-27-2kg.html'>
+                          <div href='/royal-canin-indoor-27-2kg.html'>
                             <img
                               src={product.img}
                               className='img-responsive'
@@ -125,7 +109,7 @@ export default function Cart({ showCart }) {
                         </div>
                         <div className='sum'>
                           <div className='cartInfo-name'>
-                            <div className style={{ fontSize: '14px' }}>
+                            <div style={{ fontSize: '14px' }}>
                               {product.title}
                             </div>
                             <br />
@@ -135,7 +119,7 @@ export default function Cart({ showCart }) {
                       <td className='txt_red txt_b'>
                         <span id='sell_price_pro_790'>{product.price}</span> đ
                       </td>
-                      <td className>
+                      <td>
                         <input
                           className='txt_center cor3px space5px'
                           name='quantity_pro_790'
@@ -209,7 +193,7 @@ export default function Cart({ showCart }) {
                       <span
                         className='txt_red txt_18 txt_b'
                         style={{ float: 'left', cursor: 'pointer' }}
-                        onClick={showCart}
+                        onClick={handleShowcart}
                       >
                         <i className='fa fa-angle-double-left' /> Tiếp tục mua
                         hàng
@@ -250,9 +234,9 @@ export default function Cart({ showCart }) {
             opacity: '0.7',
             zIndex: '2',
           }}
-          onClick={showCart}
+          onClick={handleShowcart}
         />
       </div>
     </div>
-  );
+  )
 }

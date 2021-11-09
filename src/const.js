@@ -1,0 +1,1 @@
+export const DOMAIN = 'https://a834-2405-4803-fe70-9890-27fd-ff90-4d3e-56f4.ngrok.io';
